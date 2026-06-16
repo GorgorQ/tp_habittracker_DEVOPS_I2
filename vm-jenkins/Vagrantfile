@@ -1,0 +1,28 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "ubuntu/jammy64"
+  config.vm.hostname = "jenkins-vm"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name   = "devops-jenkins"
+    vb.memory = 2048   # 2 Go minimum pour Jenkins
+    vb.cpus   = 2
+  end
+
+  # Port Jenkins accessible depuis Windows sur http://localhost:8081
+  # (host 8080 deja utilise par un autre processus sur cette machine)
+  config.vm.network "forwarded_port", guest: 8080, host: 8081
+
+  # Port du backend Spring Boot accessible depuis Windows sur http://localhost:9090
+  config.vm.network "forwarded_port", guest: 9090, host: 9090
+
+  # Port du frontend Angular accessible depuis Windows sur http://localhost:4200
+  config.vm.network "forwarded_port", guest: 4200, host: 4200
+
+  # Dossier partagé entre Windows et la VM (créé automatiquement)
+  config.vm.synced_folder "./shared", "/vagrant_shared", create: true
+
+  # Reseau prive pour permettre a vm-agent de joindre cette VM
+  config.vm.network "private_network", ip: "192.168.56.10"
+
+end

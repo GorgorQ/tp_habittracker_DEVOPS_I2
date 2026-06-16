@@ -2,3 +2,8 @@ backend/target/
 frontend/node_modules/
 frontend/dist/
 .DS_Store
+
+# Vagrant (contient des cles SSH privees generees automatiquement)
+.vagrant/
+vm-jenkins/shared/
+*.log
