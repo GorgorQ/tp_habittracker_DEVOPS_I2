@@ -1,0 +1,23 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "ubuntu/jammy64"
+  config.vm.hostname = "docker-vm"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name   = "devops-docker"
+    vb.memory = 2048
+    vb.cpus   = 2
+  end
+
+  # Conteneur de test Habit Tracker accessible depuis Windows sur http://localhost:9091
+  config.vm.network "forwarded_port", guest: 9090, host: 9091
+
+  # API Docker (TCP) — utilisée au niveau HARD pour connecter Jenkins a cette VM
+  config.vm.network "forwarded_port", guest: 2375, host: 2375
+
+  # Reseau prive pour permettre a vm-jenkins (192.168.56.10) de joindre cette VM
+  config.vm.network "private_network", ip: "192.168.56.11"
+
+  config.vm.synced_folder "./shared", "/vagrant_shared", create: true
+
+end
